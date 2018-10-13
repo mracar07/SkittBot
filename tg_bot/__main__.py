@@ -19,39 +19,31 @@ from tg_bot.modules.helper_funcs.chat_status import is_user_admin
 from tg_bot.modules.helper_funcs.misc import paginate_modules
 
 PM_START_TEXT = """
-Hi {}, my name is {}! I'm a group manager bot maintained by [this wonderful person](tg://user?id={}).
-I'm built in python3, using the python-telegram-bot library, and am fully opensource - you can find what makes me tick \
-[here](github.com/skittles9823/SkittBot)! and the original source [here](github.com/PaulSonOfLars/tgbot)!
+Ben {}! Ben [bu harika insan](tg://user?id={}) tarafından oluşturulan grup yönetim botuyum.
+Python3 kullanılarak oluşturuldum. Kaynak kodlarıma \
+[buradan ulaşabilirsin](github.com/mracar07/SkittBot)! Orijinal kaynak kodum ise [burada](github.com/PaulSonOfLars/tgbot)!
 
-You can find the list of available commands with /help.
-
-If you're enjoying using me, and/or would like to help me survive in the wild, hit /donate to help fund/upgrade my VPS!
+Kullanılabilir komutları /help yazarak görebilirsin.
 """
 
 HELP_STRINGS = """
-Hey there! My name is *{}*.
-I'm a modular group management bot with a few fun extras! Have a look at the following for an idea of some of \
-the things I can help you with.
+Ben *{}*.
+Ben birkaç eğlenceli ekstralar ile modüler bir grup yönetim botuyum! Bazı komutlar hakkında bir fikir edinmek için aşağıdakilere bir göz at. \
+İşte Sana yardımcı olabileceğim şeyler.
 
-*Main* commands available:
- - /start: start the bot
- - /help: PM's you this message.
- - /help <module name>: PM's you info about that module.
- - /donate: information about how to donate!
+*Kullanılabilir ana* komutlar:
+ - /start: Botu başlat. Burayı okuyor isen zaten kullanmış olmalısın!
+ - /help: Bu mesajı yollar
+ - /help <module name>: Modül hakkında yardımı özel mesaj içerisinde gönderir
  - /settings:
-   - in PM: will send you your settings for all supported modules.
-   - in a group: will redirect you to pm, with all that chat's settings.
+   - Özel mesaj içerisinde: desteklenen tüm modüller için ayarlarınızı gönderecek.
+   - bir grup içerisinde: grubun tüm sohbet ayarları size özel mesaj olarak gönderilecek.
 
 {}
 And the following:
-""".format(dispatcher.bot.first_name, "" if not ALLOW_EXCL else "\nAll commands can either be used with / or !.\n")
+""".format(dispatcher.bot.first_name, "" if not ALLOW_EXCL else "\nTüm komutlar / veya ! ile kullanılabilir.\n")
 
-DONATE_STRING = """Oh hoi, glad to hear you want to donate to [Skittles](tg://user?id=427673272). Every donation helps \
-All the donation money will go to hosting me, and keeping Skittles online \
-He doesnt have a job right now, so every little bit helps!
-[PayPal](paypal.me/Skittles2398).
-
-If you wish to donate to [Paul](tg://user?id=254318997), the lovely person who made the original source for this bot you can either donate to his [PayPal](paypal.me/PaulSonOfLars), or [Monzo](monzo.me/paulnionvestergaardlarsen)."""
+DONATE_STRING ="""Şuan için bağış kabul etmiyoruz..."""
 
 IMPORTED = {}
 MIGRATEABLE = []
@@ -139,7 +131,7 @@ def start(bot: Bot, update: Update, args: List[str]):
                 else:
                     send_settings(match.group(1), update.effective_user.id, True)
 
-            elif args[0][1:].isdigit() and "rules" in IMPORTED:
+            elif args[0][1:].isdigit() and "kurallar" in IMPORTED:
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
 
         else:
@@ -148,7 +140,7 @@ def start(bot: Bot, update: Update, args: List[str]):
                 PM_START_TEXT.format(escape_markdown(first_name), escape_markdown(bot.first_name), OWNER_ID),
                 parse_mode=ParseMode.MARKDOWN)
     else:
-        update.effective_message.reply_text("Heck, I'm alive :O")
+        update.effective_message.reply_text("Yaşıyorum :O")
 
 
 # for test purposes
@@ -238,7 +230,7 @@ def get_help(bot: Bot, update: Update):
     # ONLY send help in PM
     if chat.type != chat.PRIVATE:
 
-        update.effective_message.reply_text("Contact me in PM to get the list of possible commands.",
+        update.effective_message.reply_text("Kullanılabilir komutları görmek için bana özel mesaj gönder.",
                                             reply_markup=InlineKeyboardMarkup(
                                                 [[InlineKeyboardButton(text="Help",
                                                                        url="t.me/{}?start=help".format(
@@ -247,7 +239,7 @@ def get_help(bot: Bot, update: Update):
 
     elif len(args) >= 2 and any(args[1].lower() == x for x in HELPABLE):
         module = args[1].lower()
-        text = "Here is the available help for the *{}* module:\n".format(HELPABLE[module].__mod_name__) \
+        text = "*{}* Modülü için kullanılabilir komutlar:\n".format(HELPABLE[module].__mod_name__) \
                + HELPABLE[module].__help__
         send_help(chat.id, text, InlineKeyboardMarkup([[InlineKeyboardButton(text="Back", callback_data="help_back")]]))
 
