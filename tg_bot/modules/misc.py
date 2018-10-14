@@ -253,7 +253,7 @@ def info(bot: Bot, update: Update, args: List[str]):
     text += "\nPermanent user link: {}".format(mention_html(user.id, "link"))
 
     if user.id == OWNER_ID:
-        text += "\n\nI wont hurt Skittles ;_;"
+        text += "\n\nAcar'ı incitmem ;_;"
     else:
         if user.id in SUDO_USERS:
             text += "\nThis person is one of my sudo users! " \
