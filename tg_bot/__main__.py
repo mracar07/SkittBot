@@ -406,14 +406,14 @@ def migrate_chats(bot: Bot, update: Update):
 def main():
     test_handler = CommandHandler("test", test)
     start_handler = CommandHandler("start", start, pass_args=True)
-    start_handler = CommandHandler("baslat", start, pass_args=True)
+    baslat_handler = CommandHandler("baslat", start, pass_args=True)
 
     help_handler = CommandHandler("help", get_help)
-    help_handler = CommandHandler("yardim", get_help)
+    yardim_handler = CommandHandler("yardim", get_help)
     help_callback_handler = CallbackQueryHandler(help_button, pattern=r"help_")
 
     settings_handler = CommandHandler("settings", get_settings)
-    settings_handler = CommandHandler("ayarlar", get_settings)
+    ayarlar_handler = CommandHandler("ayarlar", get_settings)
     settings_callback_handler = CallbackQueryHandler(settings_button, pattern=r"stngs_")
 
     donate_handler = CommandHandler("donate", donate)
@@ -421,8 +421,11 @@ def main():
 
     # dispatcher.add_handler(test_handler)
     dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(baslat_handler)
     dispatcher.add_handler(help_handler)
+    dispatcher.add_handler(yardim_handler)
     dispatcher.add_handler(settings_handler)
+    dispatcher.add_handler(ayarlar_handler)
     dispatcher.add_handler(help_callback_handler)
     dispatcher.add_handler(settings_callback_handler)
     dispatcher.add_handler(migrate_handler)

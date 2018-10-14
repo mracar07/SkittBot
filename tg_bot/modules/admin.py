@@ -220,25 +220,31 @@ __help__ = """
 __mod_name__ = "Admin"
 
 PIN_HANDLER = CommandHandler("pin", pin, pass_args=True, filters=Filters.group)
-PIN_HANDLER = CommandHandler("sabitle", pin, pass_args=True, filters=Filters.group)
+SABITLE_HANDLER = CommandHandler("sabitle", pin, pass_args=True, filters=Filters.group)
 UNPIN_HANDLER = CommandHandler("unpin", unpin, filters=Filters.group)
-UNPIN_HANDLER = CommandHandler("sabitlemeyikaldir", unpin, filters=Filters.group)
+KALDIR_HANDLER = CommandHandler("sabitlemeyikaldir", unpin, filters=Filters.group)
 
 INVITE_HANDLER = CommandHandler("invitelink", invite, filters=Filters.group)
-INVITE_HANDLER = CommandHandler("davetlinki", invite, filters=Filters.group)
+DAVET_HANDLER = CommandHandler("davetlinki", invite, filters=Filters.group)
 
 PROMOTE_HANDLER = CommandHandler("promote", promote, pass_args=True, filters=Filters.group)
-PROMOTE_HANDLER = CommandHandler("yoneticiyap", promote, pass_args=True, filters=Filters.group)
+YAP_HANDLER = CommandHandler("yoneticiyap", promote, pass_args=True, filters=Filters.group)
 DEMOTE_HANDLER = CommandHandler("demote", demote, pass_args=True, filters=Filters.group)
-DEMOTE_HANDLER = CommandHandler("yoneticiligial", demote, pass_args=True, filters=Filters.group)
+AL_HANDLER = CommandHandler("yoneticiligial", demote, pass_args=True, filters=Filters.group)
 
 ADMINLIST_HANDLER = DisableAbleCommandHandler("adminlist", adminlist, filters=Filters.group)
-ADMINLIST_HANDLER = DisableAbleCommandHandler("yoneticilistesi", adminlist, filters=Filters.group)
+LISTE_HANDLER = DisableAbleCommandHandler("yoneticilistesi", adminlist, filters=Filters.group)
 
 
 dispatcher.add_handler(PIN_HANDLER)
+dispatcher.add_handler(SABITLE_HANDLER)
 dispatcher.add_handler(UNPIN_HANDLER)
+dispatcher.add_handler(KALDIR_HANDLER)
 dispatcher.add_handler(INVITE_HANDLER)
+dispatcher.add_handler(DAVET_HANDLER)
 dispatcher.add_handler(PROMOTE_HANDLER)
+dispatcher.add_handler(YAP_HANDLER)
 dispatcher.add_handler(DEMOTE_HANDLER)
+dispatcher.add_handler(AL_HANDLER)
 dispatcher.add_handler(ADMINLIST_HANDLER)
+dispatcher.add_handler(LISTE_HANDLER)
