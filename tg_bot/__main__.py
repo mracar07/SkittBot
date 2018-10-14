@@ -19,7 +19,7 @@ from tg_bot.modules.helper_funcs.chat_status import is_user_admin
 from tg_bot.modules.helper_funcs.misc import paginate_modules
 
 PM_START_TEXT = """
-Ben {}! Ben [bu harika insan](tg://user?id={}) tarafından oluşturulan grup yönetim botuyum.
+Merhaba  {}, Ben {}! Ben [bu harika insan](tg://user?id={}) tarafından oluşturulan grup yönetim botuyum.
 Python3 kullanılarak oluşturuldum. Kaynak kodlarıma \
 [buradan ulaşabilirsin](github.com/mracar07/SkittBot)! Orijinal kaynak kodum ise [burada](github.com/PaulSonOfLars/tgbot)!
 
