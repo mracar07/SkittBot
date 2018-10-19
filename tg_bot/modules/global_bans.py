@@ -97,11 +97,11 @@ def gban(bot: Bot, update: Update, args: List[str]):
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
                  "<b>Global Ban</b>" \
                  "\n#GBAN" \
-                 "\n<b>Status:</b> <code>Etkin</code>" \
+                 "\n<b>Durum:</b> <code>Etkin</code>" \
                  "\n<b>Sudo Admin:</b> {}" \
-                 "\n<b>User:</b> {}" \
+                 "\n<b>Kullanıcı:</b> {}" \
                  "\n<b>ID:</b> <code>{}</code>" \
-                 "\n<b>Reason:</b> {}".format(mention_html(banner.id, banner.first_name),
+                 "\n<b>Sebep:</b> {}".format(mention_html(banner.id, banner.first_name),
                                               mention_html(user_chat.id, user_chat.first_name), 
                                                            user_chat.id, reason or "Sebep belirtmedi"), 
                 html=True)
@@ -160,9 +160,9 @@ def ungban(bot: Bot, update: Update, args: List[str]):
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
                  "<b>Regression of Global Ban</b>" \
                  "\n#UNGBAN" \
-                 "\n<b>Status:</b> <code>Devre Dışı</code>" \
+                 "\n<b>Durum:</b> <code>Devre Dışı</code>" \
                  "\n<b>Sudo Admin:</b> {}" \
-                 "\n<b>User:</b> {}" \
+                 "\n<b>Kullanıcı:</b> {}" \
                  "\n<b>ID:</b> <code>{}</code>".format(mention_html(banner.id, banner.first_name),
                                                        mention_html(user_chat.id, user_chat.first_name), 
                                                                     user_chat.id),
@@ -309,19 +309,28 @@ __mod_name__ = "Küresel Yasaklamalar"
 
 GBAN_HANDLER = CommandHandler("gban", gban, pass_args=True,
                               filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
+KENGEL_HANDLER = CommandHandler("kengel", gban, pass_args=True,
+ 			      filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
 UNGBAN_HANDLER = CommandHandler("ungban", ungban, pass_args=True,
                                 filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
+KENGELKALDIR_HANDLER = CommandHandler("kengelkaldir", ungban, pass_args=True,
+				filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
 GBAN_LIST = CommandHandler("gbanlist", gbanlist,
                            filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
 
 GBAN_STATUS = CommandHandler("gbanstat", gbanstat, pass_args=True, filters=Filters.group)
 
+KENGEL_DURUMU = CommandHandler("kengeldurumu", gbanstat, pass_args=True, filters=Filters.group)
+
 GBAN_ENFORCER = MessageHandler(Filters.all & Filters.group, enforce_gban)
 
 dispatcher.add_handler(GBAN_HANDLER)
+dispatcher.add_handler(KENGEL_HANDLER)
 dispatcher.add_handler(UNGBAN_HANDLER)
+dispatcher.add_handler(KENGELKALDIR_HANDLER)
 dispatcher.add_handler(GBAN_LIST)
 dispatcher.add_handler(GBAN_STATUS)
+dispatcher.add_handler(KENGEL_DURUMU)
 
 if STRICT_GBAN:  # enforce GBANS if this is set
     dispatcher.add_handler(GBAN_ENFORCER, GBAN_ENFORCE_GROUP)
