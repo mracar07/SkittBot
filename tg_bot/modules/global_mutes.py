@@ -25,19 +25,19 @@ def gmute(bot: Bot, update: Update, args: List[str]):
     user_id, reason = extract_user_and_text(message, args)
 
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Gelecek sefer birisini hedef almaya çalış.")
         return
 
     if int(user_id) in SUDO_USERS:
-        message.reply_text("I spy, with my little eye... a sudo user war! Why are you guys turning on each other?")
+        message.reply_text("Sakin ol adamım, böyle bir şey olmayacak!")
         return
 
     if int(user_id) in SUPPORT_USERS:
-        message.reply_text("OOOH someone's trying to gmute a support user! *grabs popcorn*")
+        message.reply_text("OOOH Birisi destek kullanıcımı gmutelemeye çalışıyor.")
         return
 
     if user_id == bot.id:
-        message.reply_text("-_- So funny, lets gmute myself why don't I? Nice try.")
+        message.reply_text("-_- Çok eğlenceli. Kendimi küresel olarak susturmalıyım, neden olmasın? Güzel deneme.")
         return
 
     try:
@@ -47,36 +47,36 @@ def gmute(bot: Bot, update: Update, args: List[str]):
         return
 
     if user_chat.type != 'private':
-        message.reply_text("That's not a user!")
+        message.reply_text("Bu bir kullanıcı değil!")
         return
 
     if sql.is_user_gmuted(user_id):
         if not reason:
-            message.reply_text("This user is already gmuted; I'd change the reason, but you haven't given me one...")
+            message.reply_text("Bu kullanıcı zaten gmuteli; Sebebini değiştirebilirdim ama, ama bana sebep vermedin...")
             return
 
         success = sql.update_gmute_reason(user_id, user_chat.username or user_chat.first_name, reason)
         if success:
-            message.reply_text("This user is already gmuted; I've gone and updated the gmute reason though!")
+            message.reply_text("Bu kullanıcı zaten gmuteli. Sebebini gittim ve güncelledim!")
         else:
-            message.reply_text("Do you mind trying again? I thought this person was gmuted, but then they weren't? "
-                               "Am very confused")
+            message.reply_text("Yeniden düşünmeme izin ver. Bu kullanıcı zaten gmuteliydi. Yoksa değilmiydi? "
+                               "Kafam karıştı")
 
         return
 
-    message.reply_text("Shut the fuck up thanks 🤐")
+    message.reply_text("Kapa çeneni 🤐")
 
     muter = update.effective_user  # type: Optional[User]
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
                  "<b>Global Mute</b>" \
                  "\n#GMUTE" \
-                 "\n<b>Status:</b> <code>Enforcing</code>" \
+                 "\n<b>Durum:</b> <code>Etkin</code>" \
                  "\n<b>Sudo Admin:</b> {}" \
-                 "\n<b>User:</b> {}" \
+                 "\n<b>Kullanıcı:</b> {}" \
                  "\n<b>ID:</b> <code>{}</code>" \
-                 "\n<b>Reason:</b> {}".format(mention_html(muter.id, muter.first_name),
+                 "\n<b>Sebep:</b> {}".format(mention_html(muter.id, muter.first_name),
                                               mention_html(user_chat.id, user_chat.first_name), 
-                                                           user_chat.id, reason or "No reason given"), 
+                                                           user_chat.id, reason or "Sebep belirtmedi"), 
                  html=True)
 
 
@@ -116,18 +116,18 @@ def gmute(bot: Bot, update: Update, args: List[str]):
             elif excp.message == "Can't demote chat creator":
                 pass
             else:
-                message.reply_text("Could not gmute due to: {}".format(excp.message))
-                send_to_list(bot, SUDO_USERS + SUPPORT_USERS, "Could not gmute due to: {}".format(excp.message))
+                message.reply_text("Şu sebepten dolayı gmuteleyemedim: {}".format(excp.message))
+                send_to_list(bot, SUDO_USERS + SUPPORT_USERS, "Şu sebepten dolayı gmuteleyemedim: {}".format(excp.message))
                 sql.ungmute_user(user_id)
                 return
         except TelegramError:
             pass
 
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS, 
-                  "{} has been successfully gmuted!".format(mention_html(user_chat.id, user_chat.first_name)),
+                  "{} Küresel olarak susturuldu!".format(mention_html(user_chat.id, user_chat.first_name)),
                 html=True)
 
-    message.reply_text("They won't be talking again anytime soon.")
+    message.reply_text("Yakın bir zamanda bir daha konuşamayacaksın.")
 
 
 @run_async
@@ -136,28 +136,28 @@ def ungmute(bot: Bot, update: Update, args: List[str]):
 
     user_id = extract_user(message, args)
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Gelecek sefer birisini hedef almaya çalış.")
         return
 
     user_chat = bot.get_chat(user_id)
     if user_chat.type != 'private':
-        message.reply_text("That's not a user!")
+        message.reply_text("Bu bir kullanıcı değil!")
         return
 
     if not sql.is_user_gmuted(user_id):
-        message.reply_text("This user is not gmuted!")
+        message.reply_text("Bu kullanıcı küresel olarak susturulmuş değil!")
         return
 
     muter = update.effective_user  # type: Optional[User]
 
-    message.reply_text("I'll let {} speak again, globally.".format(user_chat.first_name))
+    message.reply_text("{} Kullanıcısına konuşma hakkını geri veriyorum.".format(user_chat.first_name))
 
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
                  "<b>Regression of Global Mute</b>" \
                  "\n#UNGMUTE" \
-                 "\n<b>Status:</b> <code>Ceased</code>" \
+                 "\n<b>Durum:</b> <code>Devre dışı</code>" \
                  "\n<b>Sudo Admin:</b> {}" \
-                 "\n<b>User:</b> {}" \
+                 "\n<b>Kullanıcı:</b> {}" \
                  "\n<b>ID:</b> <code>{}</code>".format(mention_html(muter.id, muter.first_name),
                                                        mention_html(user_chat.id, user_chat.first_name), 
                                                                     user_chat.id),
@@ -199,8 +199,8 @@ def ungmute(bot: Bot, update: Update, args: List[str]):
             elif excp.message == "Chat_admin_required":
                 pass
             else:
-                message.reply_text("Could not un-gmute due to: {}".format(excp.message))
-                bot.send_message(OWNER_ID, "Could not un-gmute due to: {}".format(excp.message))
+                message.reply_text("Şu sebepten dolayı küresel olarak susturmayı kaldıramadım: {}".format(excp.message))
+                bot.send_message(OWNER_ID, "Şu sebepten dolayı küresel olarak susturmayı kaldıramadım: {}".format(excp.message))
                 return
         except TelegramError:
             pass
@@ -208,11 +208,11 @@ def ungmute(bot: Bot, update: Update, args: List[str]):
     sql.ungmute_user(user_id)
 
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS, 
-                  "{} has been successfully un-gmuted!".format(mention_html(user_chat.id, 
+                  "{} kullanıcısının başarıyla küresel susturulması kaldırıldı!".format(mention_html(user_chat.id, 
                                                                          user_chat.first_name)),
                   html=True)
 
-    message.reply_text("Person has been un-gmuted.")
+    message.reply_text("Küresel susturma kaldırıldı.")
 
 
 @run_async
@@ -239,7 +239,7 @@ def check_and_mute(bot, update, user_id, should_message=True):
     if sql.is_user_gmuted(user_id):
         bot.restrict_chat_member(update.effective_chat.id, user_id, can_send_messages=False)
         if should_message:
-            update.effective_message.reply_text("This is a bad person, I'll silence them for you!")
+            update.effective_message.reply_text("Bu kullanıcı burada sessiz olmalı, sizin için susturdum!")
 
 
 @run_async
@@ -267,18 +267,18 @@ def gmutestat(bot: Bot, update: Update, args: List[str]):
     if len(args) > 0:
         if args[0].lower() in ["on", "yes"]:
             sql.enable_gmutes(update.effective_chat.id)
-            update.effective_message.reply_text("I've enabled gmutes in this group. This will help protect you "
-                                                "from spammers, unsavoury characters, and Anirudh.")
+            update.effective_message.reply_text("Bu grupta küresel susturmaları etkinleştirdim. Bu sizi spam gönderenlerden  "
+                                                "hoş olmayan karakterlerden ve en büyük trollerden korumaya yardımcı olacak.")
         elif args[0].lower() in ["off", "no"]:
             sql.disable_gmutes(update.effective_chat.id)
-            update.effective_message.reply_text("I've disabled gmutes in this group. GMutes wont affect your users "
-                                                "anymore. You'll be less protected from Anirudh though!")
+            update.effective_message.reply_text("Bu grupta gbaları devre dışı bıraktım. Küresel susturmalar, kullanıcılarınızı etkilemez "
+                                                "Herhangi bir troll veya spam göndericiden daha az korunacaksınız!")
     else:
-        update.effective_message.reply_text("Give me some arguments to choose a setting! on/off, yes/no!\n\n"
-                                            "Your current setting is: {}\n"
-                                            "When True, any gmutes that happen will also happen in your group. "
-                                            "When False, they won't, leaving you at the possible mercy of "
-                                            "spammers.".format(sql.does_chat_gmute(update.effective_chat.id)))
+        update.effective_message.reply_text("Etkinleştirmek için on/yes veya devre dışı bırakmak için off/no kullanabilirsin\n\n"
+                                            "Şu anki ayar: {}\n"
+                                            "Açık olduğunda, Tüm küreseler susturmalar grubunuza da etki eder. "
+                                            "Kapalı olduğunda sizi spammerlerin muhtemel merhametine "
+                                            "bırakacağım.".format(sql.does_chat_gmute(update.effective_chat.id)))
 
 
 def __stats__():
@@ -308,31 +308,39 @@ def __chat_settings__(chat_id, user_id):
 
 
 __help__ = """
-*Admin only:*
- - /gmutestat <on/off/yes/no>: Will disable the effect of global mutes on your group, or return your current settings.
+*Sadece yöneticiler:*
+ - /gmutestat <on/off/yes/no>: Global susturmaların grubunuz üzerindeki etkisini devre dışı bırakır veya geçerli ayarlarınızı gösterir.
 
-Gmutes, also known as global mutes, are used by the bot owners to mute spammers across all groups. This helps protect \
-you and your groups by removing spam flooders as quickly as possible. They can be disabled for you group by calling \
-/gmutestat
+Küresel susturmalar olarak da bilinen Gmutes, bot sahipleri tarafından spam gruplarını(kişilerini) tüm gruplara yasaklamak için kullanılıyor. Bu korunmaya yardımcı olur \
+Spamcılar ve diğer toksik kişilerden sizi korur. \
 """
 
-__mod_name__ = "Global Mutes"
+__mod_name__ = "Global Susturmalar"
 
 GMUTE_HANDLER = CommandHandler("gmute", gmute, pass_args=True,
                               filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
+KSUSTUR_HANDLER = CommandHandler("ksustur", gmute, pass_args=True,
+                              filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
 UNGMUTE_HANDLER = CommandHandler("ungmute", ungmute, pass_args=True,
+                                filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
+KALDIR_HANDLER = CommandHandler("ksusturkaldır", ungmute, pass_args=True,
                                 filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
 GMUTE_LIST = CommandHandler("gmutelist", gmutelist,
                            filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
 
 GMUTE_STATUS = CommandHandler("gmutestat", gmutestat, pass_args=True, filters=Filters.group)
 
+DURUM_STATUS = CommandHandler("ksusturdurumu", gmutestat, pass_args=True, filters=Filters.group)
+
 GMUTE_ENFORCER = MessageHandler(Filters.all & Filters.group, enforce_gmute)
 
 dispatcher.add_handler(GMUTE_HANDLER)
+dispatcher.add_handler(KSUSTUR_HANDLER)
 dispatcher.add_handler(UNGMUTE_HANDLER)
+dispatcher.add_handler(KALDIR_HANDLER)
 dispatcher.add_handler(GMUTE_LIST)
 dispatcher.add_handler(GMUTE_STATUS)
+dispatcher.add_handler(DURUM_STATUS)
 
 if STRICT_GMUTE:
     dispatcher.add_handler(GMUTE_ENFORCER, GMUTE_ENFORCE_GROUP)
